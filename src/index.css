@@ -1,0 +1,226 @@
+@import "tailwindcss";
+
+:root {
+  --navy: #1a3a52;
+  --navy-soft: #3d5a75;
+  --gold: #D4AF37;
+  --gold-hover: #D4AF37CC;
+  --bg: #F5F1E8;
+  --surface: rgba(255, 255, 255, 0.55);
+  --surface-hover: rgba(255, 255, 255, 0.72);
+  --border: rgba(26, 58, 82, 0.12);
+  --border-hover: #D4AF37;
+  --text: #1a3a52;
+  --text-dim: #4A5F72;
+  --text-faint: #7C93A3;
+  --accent: #D4AF37;
+  --accent-2: #1a3a52;
+  --accent-3: #4a7c59;
+  --accent-yellow: #C17817;
+  --accent-purple: #7c5cbf;
+  --font-heading: 'Montserrat', -apple-system, sans-serif;
+  --font-body: 'Inter', -apple-system, sans-serif;
+  --font-accent: 'Playfair Display', Georgia, serif;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), 'Segoe UI', system-ui, sans-serif;
+  margin: 0;
+}
+
+h1, h2, h3, h4 {
+  font-family: var(--font-heading), sans-serif;
+}
+
+.font-mono-ui { font-family: 'Consolas', 'SF Mono', 'Courier New', monospace; }
+
+.font-heading { font-family: var(--font-heading), sans-serif; }
+
+.font-accent {
+  font-family: var(--font-accent), Georgia, serif;
+  font-style: italic;
+}
+
+.grid-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  background-image:
+    linear-gradient(rgba(26, 58, 82, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(26, 58, 82, 0.05) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, black 40%, transparent 100%);
+}
+
+.grid-bg::before {
+  content: "";
+  position: absolute;
+  top: -10%;
+  left: 50%;
+  width: 900px;
+  height: 700px;
+  transform: translateX(-50%);
+  background: radial-gradient(circle, rgba(212, 175, 55, 0.18), transparent 65%);
+  filter: blur(20px);
+}
+
+/* Glossy "liquid glass" card: translucent, blurred, beveled sheen, 3D lift — Apple-style */
+.glass-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background-color: var(--surface);
+  backdrop-filter: blur(20px) saturate(200%);
+  -webkit-backdrop-filter: blur(20px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  border-radius: 20px;
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.95),
+    inset 0 -14px 24px -16px rgba(26, 58, 82, 0.16),
+    0 2px 6px rgba(26, 58, 82, 0.05),
+    0 22px 44px -18px rgba(26, 58, 82, 0.28);
+  transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1), border-color 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(125deg, rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.16) 24%, rgba(255, 255, 255, 0) 48%);
+  pointer-events: none;
+}
+
+.glass-card::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 45%;
+  z-index: -1;
+  background: linear-gradient(to top, rgba(26, 58, 82, 0.07), transparent);
+  pointer-events: none;
+}
+
+.glass-card:hover {
+  transform: translateY(-6px) scale(1.008);
+  border-color: var(--border-hover);
+  background-color: var(--surface-hover);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 1),
+    inset 0 -14px 24px -16px rgba(26, 58, 82, 0.14),
+    0 4px 10px rgba(26, 58, 82, 0.07),
+    0 30px 56px -18px rgba(26, 58, 82, 0.34),
+    0 0 32px rgba(212, 175, 55, 0.1);
+}
+
+/* Translucent glass bar for nav/footer/modal chrome */
+.glass-bar {
+  position: relative;
+  background: rgba(26, 58, 82, 0.85);
+  backdrop-filter: blur(20px) saturate(160%);
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.18),
+    0 4px 24px rgba(10, 20, 30, 0.18);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s cubic-bezier(0.2, 0.7, 0.3, 1), transform 0.7s cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@keyframes pulse-dot {
+  0% { box-shadow: 0 0 0 0 rgba(74, 124, 89, 0.5); }
+  70% { box-shadow: 0 0 0 8px rgba(74, 124, 89, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(74, 124, 89, 0); }
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent-3);
+  animation: pulse-dot 2s infinite;
+}
+
+.gradient-text {
+  background: linear-gradient(135deg, var(--navy), var(--navy-soft));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.btn-primary {
+  position: relative;
+  background: linear-gradient(160deg, #EBCC70 0%, var(--gold) 55%, #C29A2E 100%);
+  color: var(--navy);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.7),
+    inset 0 -2px 4px rgba(120, 85, 10, 0.18),
+    0 6px 16px rgba(212, 175, 55, 0.35);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, background 0.25s ease;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -2px 4px rgba(120, 85, 10, 0.16),
+    0 12px 28px rgba(212, 175, 55, 0.45);
+}
+
+.btn-outline {
+  background: var(--surface);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.65);
+  color: var(--text);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.75),
+    0 6px 16px rgba(26, 58, 82, 0.1);
+  transition: transform 0.25s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.25s ease, background 0.25s ease, border-color 0.25s ease;
+}
+
+.btn-outline:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-hover);
+  background: var(--surface-hover);
+  box-shadow:
+    inset 0 1.5px 0 rgba(255, 255, 255, 0.9),
+    0 12px 24px rgba(26, 58, 82, 0.16);
+}
+
+/* Small glossy pill/badge — tags, chips */
+.pill-glass {
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    0 3px 8px rgba(26, 58, 82, 0.08);
+}
+
+::selection {
+  background: rgba(212, 175, 55, 0.3);
+}
+
+/* Disable easy copy affordances on the certificate preview canvas */
+.no-select {
+  user-select: none;
+  -webkit-user-select: none;
+}
