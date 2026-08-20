@@ -7,6 +7,7 @@ const links = [
   { href: '#evidence', label: 'Evidence' },
   { href: '#builds', label: 'Builds' },
   { href: '#contact', label: 'Contact' },
+  { href: '/self-check', label: 'Self-Check' },
 ]
 
 export function Nav() {
@@ -15,7 +16,7 @@ export function Nav() {
   return (
     <header className="glass-bar sticky top-0 z-50 border-b border-white/10">
       <div className="max-w-[1080px] mx-auto px-6 py-4 flex items-center justify-between">
-        <a href="#home" className="font-heading font-bold text-lg tracking-wide text-white">
+        <a href="/" className="font-heading font-bold text-lg tracking-wide text-white">
           BS<span className="text-[color:var(--gold)]">.</span>
         </a>
 
