@@ -1,17 +1,29 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { openContactModal } from '../lib/contactModalBus'
 import { MessageIcon } from './BrandIcons'
+import { supabase } from '../lib/supabaseClient'
 
-const links = [
+const baseLinks = [
   { href: '#about', label: 'About' },
   { href: '#evidence', label: 'Evidence' },
   { href: '#builds', label: 'Builds' },
   { href: '#contact', label: 'Contact' },
-  { href: '/self-check', label: 'Self-Check' },
 ]
 
 export function Nav() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [selfCheckEnabled, setSelfCheckEnabled] = useState(false)
+
+  useEffect(() => {
+    supabase
+      .from('profile')
+      .select('self_check_enabled')
+      .eq('id', 1)
+      .single()
+      .then(({ data }) => setSelfCheckEnabled(Boolean(data?.self_check_enabled)))
+  }, [])
+
+  const links = selfCheckEnabled ? [...baseLinks, { href: '/self-check', label: 'Self-Check' }] : baseLinks
 
   return (
     <header className="glass-bar sticky top-0 z-50 border-b border-white/10">

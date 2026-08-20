@@ -16,6 +16,7 @@ export interface Profile {
   quick_facts: { label: string; value: string }[]
   stats: { label: string; value: number }[]
   photo_url: string | null
+  self_check_enabled: boolean
 }
 
 export interface EvidenceItem {

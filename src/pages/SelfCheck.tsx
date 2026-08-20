@@ -138,17 +138,19 @@ export function SelfCheck() {
   const [answers, setAnswers] = useState<Answers>({})
   const [contactOpen, setContactOpen] = useState(false)
   const [name, setName] = useState('Bhumii Shah')
+  const [enabled, setEnabled] = useState<boolean | null>(null)
 
   useEffect(() => onOpenContactModal(() => setContactOpen(true)), [])
 
   useEffect(() => {
     supabase
       .from('profile')
-      .select('name')
+      .select('name, self_check_enabled')
       .eq('id', 1)
       .single()
       .then(({ data }) => {
         if (data?.name) setName(data.name)
+        setEnabled(Boolean(data?.self_check_enabled))
       })
   }, [])
 
@@ -169,6 +171,35 @@ export function SelfCheck() {
   }
 
   const result = done ? scoreResult(answers) : null
+
+  if (enabled === null) {
+    return (
+      <>
+        <div className="grid-bg" aria-hidden="true" />
+        <Nav />
+        <main className="max-w-[720px] mx-auto px-6 py-20 min-h-[70vh]" />
+        <Footer name={name} />
+      </>
+    )
+  }
+
+  if (enabled === false) {
+    return (
+      <>
+        <div className="grid-bg" aria-hidden="true" />
+        <Nav />
+        <main className="max-w-[720px] mx-auto px-6 py-20 min-h-[70vh]">
+          <div className="glass-card p-7 md:p-9 text-center">
+            <h1 className="text-2xl font-bold mb-3">This page isn’t available right now</h1>
+            <p className="text-[color:var(--text-dim)]">
+              Head back to the <a href="/" className="text-[color:var(--accent)] font-semibold">homepage</a>.
+            </p>
+          </div>
+        </main>
+        <Footer name={name} />
+      </>
+    )
+  }
 
   return (
     <>

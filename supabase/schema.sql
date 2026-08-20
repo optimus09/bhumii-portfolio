@@ -16,6 +16,7 @@ create table if not exists profile (
   quick_facts jsonb not null default '[]',
   stats jsonb not null default '[]',
   photo_url text,
+  self_check_enabled boolean not null default true,
   constraint singleton check (id = 1)
 );
 

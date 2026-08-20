@@ -149,6 +149,21 @@ export function AdminProfile() {
       </div>
 
       <div className="glass-card p-6 mb-6">
+        <label className={labelCls}>Pages</label>
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            checked={profile.self_check_enabled}
+            onChange={(e) => update('self_check_enabled', e.target.checked)}
+            className="w-4 h-4"
+          />
+          <span className="text-sm">
+            Show the <strong>Self-Check</strong> page (/self-check) and its nav link
+          </span>
+        </label>
+      </div>
+
+      <div className="glass-card p-6 mb-6">
         <label className={labelCls}>Quick facts</label>
         <div className="space-y-3">
           {profile.quick_facts.map((f, i) => (
