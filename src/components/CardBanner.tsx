@@ -93,7 +93,7 @@ export function CardBanner({ imageUrl, icon, tint, alt }: CardBannerProps) {
   if (imageUrl) {
     return (
       <div className="h-44 bg-white flex items-center justify-center border-b border-[color:var(--border)] overflow-hidden">
-        <img src={imageUrl} alt={alt} className="max-h-full max-w-full object-contain p-5" />
+        <img src={imageUrl} alt={alt} loading="lazy" decoding="async" className="max-h-full max-w-full object-contain p-5" />
       </div>
     )
   }

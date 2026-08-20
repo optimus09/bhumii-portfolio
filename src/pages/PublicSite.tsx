@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { supabase, supabaseConfigured } from '../lib/supabaseClient'
 import type { EvidenceItem, Profile, Project } from '../types'
 import { Nav } from '../components/Nav'
@@ -10,7 +10,25 @@ import { Contact } from '../components/Contact'
 import { Footer } from '../components/Footer'
 import { ContactModal } from '../components/ContactModal'
 import { onOpenContactModal } from '../lib/contactModalBus'
-import { ChatWidget } from '../components/ChatWidget'
+
+// Deferred: the chat widget (and its large avatar) is non-critical, so it is
+// code-split and mounted only after the page is interactive to keep it off the
+// initial load / LCP path.
+const ChatWidget = lazy(() => import('../components/ChatWidget').then((m) => ({ default: m.ChatWidget })))
+
+function useDeferredMount() {
+  const [ready, setReady] = useState(false)
+  useEffect(() => {
+    const w = window as typeof window & { requestIdleCallback?: (cb: () => void) => number }
+    if (typeof w.requestIdleCallback === 'function') {
+      const id = w.requestIdleCallback(() => setReady(true))
+      return () => (w as unknown as { cancelIdleCallback?: (id: number) => void }).cancelIdleCallback?.(id)
+    }
+    const t = setTimeout(() => setReady(true), 2000)
+    return () => clearTimeout(t)
+  }, [])
+  return ready
+}
 
 export function PublicSite() {
   const [profile, setProfile] = useState<Profile | null>(null)
@@ -19,6 +37,7 @@ export function PublicSite() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [contactOpen, setContactOpen] = useState(false)
+  const chatReady = useDeferredMount()
 
   useEffect(() => onOpenContactModal(() => setContactOpen(true)), [])
 
@@ -94,7 +113,11 @@ export function PublicSite() {
       </main>
       <Footer name={profile.name} />
       {contactOpen && <ContactModal onClose={() => setContactOpen(false)} />}
-      <ChatWidget />
+      {chatReady && (
+        <Suspense fallback={null}>
+          <ChatWidget />
+        </Suspense>
+      )}
     </>
   )
 }

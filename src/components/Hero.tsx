@@ -84,6 +84,8 @@ export function Hero({ profile }: { profile: Profile }) {
               <img
                 src={profile.photo_url}
                 alt={`Portrait of ${profile.name}`}
+                fetchPriority="high"
+                decoding="async"
                 className="w-full h-full object-cover contrast-[1.04] saturate-[0.9]"
               />
             ) : (

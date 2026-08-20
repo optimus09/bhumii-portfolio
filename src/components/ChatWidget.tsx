@@ -20,7 +20,7 @@ const SUGGESTIONS = [
   'Tell me about her technical projects',
 ]
 
-const AVATAR_SRC = '/images/assistant-avatar.png'
+const AVATAR_SRC = '/images/assistant-avatar.webp'
 
 export function ChatWidget() {
   const [open, setOpen] = useState(false)
@@ -73,6 +73,8 @@ export function ChatWidget() {
           <img
             src={AVATAR_SRC}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="h-32 w-auto object-contain drop-shadow-[0_10px_20px_rgba(0,0,0,0.35)] hover:scale-105 transition-transform"
             onError={() => setAvatarOk(false)}
           />

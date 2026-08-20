@@ -83,7 +83,7 @@ function OtherPublicationsRow({ item }: { item: EvidenceItem }) {
     <div className="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 py-3 border-b border-[color:var(--border)] last:border-b-0">
       <div className="flex items-center gap-3">
         {item.image_url && (
-          <img src={item.image_url} alt="" className="w-9 h-9 rounded-md object-cover border border-[color:var(--border)] shrink-0 bg-white" />
+          <img src={item.image_url} alt="" loading="lazy" decoding="async" className="w-9 h-9 rounded-md object-cover border border-[color:var(--border)] shrink-0 bg-white" />
         )}
         <div>
           <span className="font-medium">{item.title}</span>
