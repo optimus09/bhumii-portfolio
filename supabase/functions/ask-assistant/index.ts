@@ -11,9 +11,30 @@ interface ChatMessage {
   text: string
 }
 
+const RATE_LIMIT = 8
+const RATE_WINDOW_MS = 5 * 60 * 1000
+const requestLog = new Map<string, number[]>()
+
+function isRateLimited(ip: string): boolean {
+  const now = Date.now()
+  const timestamps = (requestLog.get(ip) ?? []).filter((t) => now - t < RATE_WINDOW_MS)
+  timestamps.push(now)
+  requestLog.set(ip, timestamps)
+  if (requestLog.size > 5000) requestLog.clear()
+  return timestamps.length > RATE_LIMIT
+}
+
 Deno.serve(async (req: Request) => {
   if (req.method === 'OPTIONS') {
     return new Response('ok', { headers: corsHeaders })
+  }
+
+  const ip = req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'unknown'
+  if (isRateLimited(ip)) {
+    return new Response(JSON.stringify({ error: 'Too many requests. Please wait a few minutes and try again.' }), {
+      status: 429,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    })
   }
 
   try {

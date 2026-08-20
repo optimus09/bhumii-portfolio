@@ -15,6 +15,7 @@ export function ContactModal({ onClose }: ContactModalProps) {
   const [email, setEmail] = useState('')
   const [reason, setReason] = useState('')
   const [message, setMessage] = useState('')
+  const [website, setWebsite] = useState('')
   const [busy, setBusy] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [sent, setSent] = useState(false)
@@ -29,6 +30,10 @@ export function ContactModal({ onClose }: ContactModalProps) {
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault()
+    if (website) {
+      setSent(true)
+      return
+    }
     setBusy(true)
     setError(null)
     const { error } = await supabase.from('contact_messages').insert({ name, email, reason, message })
@@ -67,6 +72,16 @@ export function ContactModal({ onClose }: ContactModalProps) {
           <>
             <p className="text-sm text-[color:var(--text-dim)] mb-5">Tell Bhumii what's on your mind — she'll follow up by email.</p>
             <form onSubmit={handleSubmit} className="space-y-4">
+              <input
+                type="text"
+                name="website"
+                value={website}
+                onChange={(e) => setWebsite(e.target.value)}
+                tabIndex={-1}
+                autoComplete="off"
+                aria-hidden="true"
+                style={{ position: 'absolute', left: '-9999px', width: 1, height: 1, opacity: 0 }}
+              />
               <div>
                 <label className={labelCls}>Your name</label>
                 <input required className={inputCls} value={name} onChange={(e) => setName(e.target.value)} />
