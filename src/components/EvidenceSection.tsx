@@ -1,8 +1,11 @@
-import { useState } from 'react'
+import { lazy, Suspense, useState } from 'react'
 import type { EvidenceCategory, EvidenceItem } from '../types'
 import { Reveal } from './Reveal'
-import { PdfViewerModal } from './PdfViewerModal'
 import { CardBanner, type IconKind, type Tint } from './CardBanner'
+
+const PdfViewerModal = lazy(() =>
+  import('./PdfViewerModal').then((m) => ({ default: m.PdfViewerModal })),
+)
 
 const tagColorClass: Record<string, string> = {
   blue: 'bg-[rgba(26,58,82,0.1)] text-[color:var(--navy)]',
@@ -163,7 +166,9 @@ export function EvidenceSection({ items }: { items: EvidenceItem[] }) {
       )}
 
       {viewing && viewing.pdf_url && (
-        <PdfViewerModal url={viewing.pdf_url} title={viewing.title} onClose={() => setViewing(null)} />
+        <Suspense fallback={null}>
+          <PdfViewerModal url={viewing.pdf_url} title={viewing.title} onClose={() => setViewing(null)} />
+        </Suspense>
       )}
     </section>
   )
